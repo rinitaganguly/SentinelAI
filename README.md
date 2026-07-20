@@ -80,7 +80,7 @@ All scan reports are stored in a SQLite database, allowing users to review previ
 ---
 
 ##  Project Structure
-
+```text
 SentinelAI/
 │
 ├── backend/
