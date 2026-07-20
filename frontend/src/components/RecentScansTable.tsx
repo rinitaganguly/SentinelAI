@@ -1,66 +1,118 @@
-const scans = [
-    {
-        id: "#001",
-        model: "Llama 3.2",
-        attack: "Prompt Injection",
-        score: "98%",
-        status: "PASS",
-    },
-    {
-        id: "#002",
-        model: "Gemma 3",
-        attack: "Jailbreak",
-        score: "97%",
-        status: "PASS",
-    },
-    {
-        id: "#003",
-        model: "Qwen 2.5",
-        attack: "Data Exfiltration",
-        score: "61%",
-        status: "FAIL",
-    },
-];
+interface Scan {
+    id: number;
+    target: string;
+    risk: string;
+    created_at: string;
+}
 
-export default function RecentScansTable() {
+interface Props {
+    scans: Scan[];
+}
+
+function riskBadge(risk: string) {
+    switch (risk.toLowerCase()) {
+        case "high":
+            return "bg-red-500/20 text-red-400 border border-red-500/30";
+
+        case "medium":
+            return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+
+        default:
+            return "bg-green-500/20 text-green-400 border border-green-500/30";
+    }
+}
+
+export default function RecentScansTable({ scans }: Props) {
     return (
-        <div className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-            <h2 className="mb-6 text-xl font-semibold text-white">
-                Recent Scans
-            </h2>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
 
-            <table className="w-full">
-                <thead className="text-left text-zinc-500">
-                    <tr>
-                        <th className="pb-4">ID</th>
-                        <th className="pb-4">Model</th>
-                        <th className="pb-4">Attack</th>
-                        <th className="pb-4">Score</th>
-                        <th className="pb-4">Status</th>
-                    </tr>
-                </thead>
+            <div className="mb-6 flex items-center justify-between">
 
-                <tbody>
-                    {scans.map((scan) => (
-                        <tr key={scan.id} className="border-t border-zinc-800">
-                            <td className="py-4">{scan.id}</td>
-                            <td>{scan.model}</td>
-                            <td>{scan.attack}</td>
-                            <td className="text-cyan-400">{scan.score}</td>
-                            <td>
-                                <span
-                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${scan.status === "PASS"
-                                        ? "bg-green-500/20 text-green-400"
-                                        : "bg-red-500/20 text-red-400"
-                                        }`}
+                <div>
+
+                    <h2 className="text-2xl font-bold text-white">
+                        Recent Scans
+                    </h2>
+
+                    <p className="mt-1 text-sm text-zinc-500">
+                        Latest AI security analysis reports
+                    </p>
+
+                </div>
+
+                <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-sm font-semibold text-cyan-400">
+                    {scans.length} Scans
+                </span>
+
+            </div>
+
+            {scans.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-zinc-700 p-10 text-center">
+
+                    <p className="text-lg font-semibold text-white">
+                        No scans available
+                    </p>
+
+                    <p className="mt-2 text-zinc-500">
+                        Run your first AI security scan to see reports here.
+                    </p>
+
+                </div>
+            ) : (
+                <div className="overflow-x-auto">
+
+                    <table className="w-full">
+
+                        <thead>
+
+                            <tr className="border-b border-zinc-800 text-left text-sm uppercase tracking-wide text-zinc-500">
+
+                                <th className="p-4">Target</th>
+                                <th className="p-4">Risk</th>
+                                <th className="p-4">Scan Time</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {scans.map((scan) => (
+
+                                <tr
+                                    key={scan.id}
+                                    className="border-b border-zinc-800 transition hover:bg-zinc-800/40"
                                 >
-                                    {scan.status}
-                                </span>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+
+                                    <td className="p-4 font-medium text-white">
+                                        {scan.target}
+                                    </td>
+
+                                    <td className="p-4">
+
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${riskBadge(scan.risk)}`}
+                                        >
+                                            {scan.risk}
+                                        </span>
+
+                                    </td>
+
+                                    <td className="p-4 text-zinc-400">
+                                        {new Date(scan.created_at).toLocaleString()}
+                                    </td>
+
+                                </tr>
+
+                            ))}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            )}
+
         </div>
     );
 }

@@ -1,26 +1,34 @@
 import { useState } from "react";
+import { startScan } from "../services/api";
 
-export default function ScanButton() {
-    const [scanning, setScanning] = useState(false);
+interface Props {
+    onReportGenerated: (report: string) => void;
+}
 
-    function startScan() {
-        setScanning(true);
+export default function ScanButton({ onReportGenerated }: Props) {
+    const [loading, setLoading] = useState(false);
 
-        setTimeout(() => {
-            setScanning(false);
-        }, 3000);
+    async function handleScan() {
+        setLoading(true);
+
+        try {
+            const result = await startScan();
+            onReportGenerated(result.report);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to run AI scan.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <button
-            onClick={startScan}
-            disabled={scanning}
-            className={`mt-8 rounded-xl px-8 py-4 font-semibold transition-all duration-300 ${scanning
-                ? "bg-yellow-500 text-black animate-pulse"
-                : "bg-cyan-500 text-black hover:scale-105 hover:bg-cyan-400"
-                }`}
+            onClick={handleScan}
+            disabled={loading}
+            className="rounded-lg bg-cyan-500 px-6 py-3 font-semibold text-black transition hover:bg-cyan-400 disabled:opacity-50"
         >
-            {scanning ? "Scanning..." : "Launch Security Scan"}
+            {loading ? "Running AI Scan..." : "Launch Security Scan"}
         </button>
     );
 }
