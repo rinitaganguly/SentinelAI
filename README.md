@@ -56,7 +56,7 @@ All scan reports are stored in a SQLite database, allowing users to review previ
 ---
 
 ##  System Architecture
-
+## 🏗️ System Architecture
 
 ```text
                 +----------------------+

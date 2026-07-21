@@ -1,5 +1,13 @@
 import json
-import ollama
+import os
+
+from dotenv import load_dotenv
+from groq import Groq
+
+load_dotenv()
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL = "llama-3.3-70b-versatile"
 
 
 def calculate_risk(vulnerabilities):
@@ -84,17 +92,18 @@ Source Code:
 {code}
 """
 
-    response = ollama.chat(
-        model="qwen2.5:7b",
+    response = client.chat.completions.create(
+        model=MODEL,
         messages=[
             {
                 "role": "user",
                 "content": prompt,
             }
         ],
+        temperature=0.2,
     )
 
-    text = response["message"]["content"]
+    text = response.choices[0].message.content or ""
 
     text = text.replace("```json", "")
     text = text.replace("```", "")

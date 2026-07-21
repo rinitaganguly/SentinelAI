@@ -6,6 +6,9 @@ from app.models.scan import Scan
 from app.services.ai_service import analyze_code
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
