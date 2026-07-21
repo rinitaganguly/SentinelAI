@@ -6,14 +6,12 @@ SentinelAI allows developers to upload source code files and receive an AI-gener
 
 ---
 
-# Live Demo
+## Live Demo
 
-Frontend:
-https://sentinel-ai-ten-virid.vercel.app
+Frontend: https://sentinel-ai-ten-virid.vercel.app
 
-> Backend deployment coming soon.
-
----
+Backend API:
+https://sentinelai-uhp5.onrender.com
 
 # Features
 
