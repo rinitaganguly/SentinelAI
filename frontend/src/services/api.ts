@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+const API = "https://sentinelai-uhp5.onrender.com";
 
 export async function getDashboard() {
     const response = await fetch(`${API}/dashboard`);
