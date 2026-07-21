@@ -1,126 +1,187 @@
-#  SentinelAI
+# SentinelAI
 
-> AI-powered Static Application Security Testing (SAST) platform that analyzes source code using a locally hosted Large Language Model (LLM) to detect security vulnerabilities and generate actionable recommendations.
+An AI-powered Static Application Security Testing (SAST) platform that analyzes source code for security vulnerabilities using Large Language Models (LLMs).
 
----
-
-##  Overview
-
-SentinelAI is an AI-driven Static Application Security Testing (SAST) platform designed to help developers identify security vulnerabilities in source code before deployment.
-
-Users can upload source code files through a modern React dashboard, where a FastAPI backend processes the file and sends it to a locally hosted Qwen2.5 LLM running on Ollama. The AI analyzes the code, identifies potential vulnerabilities, assigns severity levels, and generates detailed security recommendations.
-
-All scan reports are stored in a SQLite database, allowing users to review previous analyses, export reports as PDF, and manage scan history.
+SentinelAI allows developers to upload source code files and receive an AI-generated security report containing detected vulnerabilities, severity levels, risk assessment, and security recommendations.
 
 ---
 
-##  Features
+# Live Demo
 
-- AI-powered source code analysis
--  Static Application Security Testing (SAST)
--  Upload source code files
--  Detect common security vulnerabilities
--  Dashboard with scan statistics
--  Detailed AI-generated security reports
--  Export reports as PDF
--  Scan history management
--  Delete previous scans
--  SQLite database integration
--  FastAPI REST API
--  Modern React + Tailwind CSS interface
+Frontend:
+https://sentinel-ai-ten-virid.vercel.app
+
+> Backend deployment coming soon.
+
 ---
 
-##  Tech Stack
+# Features
 
-### Frontend
+- AI-powered security analysis
+- Source code upload
+- Automatic vulnerability detection
+- Risk assessment (Low / Medium / High / Critical)
+- Security recommendations
+- Dashboard with scan statistics
+- Scan history
+- Individual scan reports
+- Delete scan history
+- REST API
+- SQLite database
+- Modern React UI
+
+---
+
+# Tech Stack
+
+## Frontend
+
 - React
 - TypeScript
 - Tailwind CSS
 - Vite
 
-### Backend
+## Backend
+
 - FastAPI
-- Python
 - SQLAlchemy
 - SQLite
+- Python
 
-### AI
-- Ollama
-- Qwen2.5:7B Large Language Model
+## AI
 
-### Tools
+- Groq API
+- Llama 3.3 70B Versatile
+
+## Tools
+
 - Git
 - GitHub
 - VS Code
 
 ---
 
-##  System Architecture
-## 🏗️ System Architecture
+# System Architecture
 
 ```text
-                +----------------------+
-                |      React UI        |
-                +----------+-----------+
-                           |
-                    REST API Requests
-                           |
-                +----------v-----------+
-                |       FastAPI        |
-                +----------+-----------+
-                           |
-        +------------------+------------------+
-        |                                     |
-+-------v--------+                   +--------v--------+
-|  Ollama LLM    |                   | SQLite Database |
-|   Qwen2.5:7B   |                   | Scan History    |
-+----------------+                   +-----------------+
+                User
+                  │
+                  ▼
+        React Frontend
+             (Vercel)
+                  │
+                  ▼
+         FastAPI Backend
+                  │
+                  ▼
+             Groq API
+                  │
+                  ▼
+       Llama 3.3 70B Model
 ```
 
 ---
 
-##  Project Structure
-```text
-SentinelAI/
+# Project Structure
+
+```
+SentinelAI
 │
-├── backend/
-├── frontend/
-├── screenshots/
-├── README.md
-└── .gitignore
+├── backend
+│   ├── app
+│   │   ├── api
+│   │   ├── core
+│   │   ├── database
+│   │   ├── models
+│   │   ├── schemas
+│   │   ├── services
+│   │   └── uploads
+│   │
+│   ├── requirements.txt
+│   └── main.py
+│
+├── frontend
+│   ├── src
+│   ├── public
+│   └── package.json
+│
+└── README.md
 ```
+
 ---
 
-##  Installation
+# AI Workflow
 
-### 1. Clone the Repository
+1. User uploads a source code file.
+2. FastAPI receives the file.
+3. Source code is sent to the Groq API.
+4. The AI analyzes the code for security vulnerabilities.
+5. The response is converted into structured JSON.
+6. SentinelAI calculates the final risk level.
+7. The report is stored in SQLite.
+8. Results are displayed on the dashboard.
+
+---
+
+# Security Checks
+
+SentinelAI can detect issues related to:
+
+- SQL Injection
+- Command Injection
+- Path Traversal
+- Hardcoded Secrets
+- Weak Cryptography
+- Missing Input Validation
+- Unsafe File Handling
+- Missing Authentication
+- Missing Authorization
+- Resource Leaks
+- Error Handling Issues
+- Logic Flaws
+- Integer Overflow
+- Buffer Overflow
+- Division by Zero
+
+---
+
+# Installation
+
+## Clone the repository
 
 ```bash
 git clone https://github.com/rinitaganguly/SentinelAI.git
-cd SentinelAI
 ```
 
-### 2. Backend Setup
+---
+
+## Backend
 
 ```bash
 cd backend
 
 python -m venv .venv
 
-# Windows
 .venv\Scripts\activate
 
-# macOS/Linux
-source .venv/bin/activate
-
 pip install -r requirements.txt
-
-uvicorn main:app --reload
 ```
 
-### 3. Frontend Setup
+Create a `.env` file inside the backend folder.
 
-Open a new terminal.
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+Run the backend
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+## Frontend
 
 ```bash
 cd frontend
@@ -130,62 +191,60 @@ npm install
 npm run dev
 ```
 
-The frontend will start on:
-
-```text
-http://localhost:5173
-```
-
-The backend will start on:
-
-```text
-http://127.0.0.1:8000
-```
-
 ---
 
-## Usage
-
-1. Open the React dashboard.
-2. Upload a source code file.
-3. Wait for the AI analysis to complete.
-4. Review detected vulnerabilities.
-5. Export the security report as a PDF.
-6. View or delete previous scan reports from the History page.
----
-
-##  API Endpoints
+# API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
+|---------|----------|-------------|
+| GET | `/` | Health Check |
 | GET | `/dashboard` | Dashboard statistics |
 | POST | `/upload` | Upload and analyze source code |
 | GET | `/history` | Retrieve scan history |
-| GET | `/scan/{id}` | Get a specific scan report |
-| DELETE | `/history/{id}` | Delete a scan report |
+| GET | `/scan/{id}` | Retrieve specific report |
+| DELETE | `/history/{id}` | Delete scan |
 
 ---
 
-##  Future Enhancements
+# Database
 
-- User authentication
-- Cloud LLM support
-- Multi-file project scanning
-- OWASP Top 10 mapping
-- CVSS scoring
-- Docker deployment
-- CI/CD pipeline
+SQLite stores:
+
+- Uploaded file information
+- Scan history
+- Risk level
+- Vulnerabilities
+- Recommendations
+- Scan timestamps
 
 ---
 
-## Author
+# Future Improvements
+
+- User Authentication
+- Docker Support
+- Multi-file Scanning
+- OWASP Top 10 Mapping
+- CI/CD Pipeline
+- Multi-language Support
+- Cloud Database
+- CVE Integration
+- PDF Report Enhancements
+- Team Collaboration
+
+---
+
+# Author
 
 **Rinita Ganguly**
 
-GitHub: https://github.com/rinitaganguly
+GitHub
+
+https://github.com/rinitaganguly
+
 
 ---
 
-##  License
+# License
 
 This project is licensed under the MIT License.
